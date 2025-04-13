@@ -1,0 +1,261 @@
+
+$.Util = {
+    setInterpolation : function () {
+        Scene.selectAllNodes (false);
+        Scene.selectAllNodes (true);
+        var timestep = Scene.getTimeStep();
+        var itype = DzFloatProperty.LINEAR_INTERP;
+        var range = Scene.getAnimRange();
+        var numNodes = Scene.getNumSelectedNodes();
+        for( var n = 0; n < numNodes; n++ )
+        {
+            node = Scene.getSelectedNode( n );
+            var numProps = node.getNumProperties();
+            for( var i = 0; i < numProps; i++ )
+            {
+                var prop = node.getProperty( i );
+                if( prop.canAnimate() )
+                {
+                    if( prop.hasKeys() )
+                    {
+                        if( prop.isNumeric () ) //if( prop.isA( "DzFloatProperty" ) )
+                        {
+                            var numKeys = prop.getNumKeys();
+                            for( var j = 0; j < numKeys; j++ )
+                            {
+                                var kt = prop.getKeyTime( j );
+
+                                if( ( kt >= range.start ) && ( kt <= range.end ) )
+                                {
+                                    if( prop.setKeyInterpolation )
+                                        prop.setKeyInterpolation( j, itype );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    processModifierValues : function (oNode,oModifierFrames) {
+        for (var _key in oModifierFrames) {
+            var aFrame = _key.split("_");
+            var iFrame = parseInt(aFrame[1]);
+            var oModifiers = oModifierFrames[_key];
+            Scene.setFrame(iFrame);
+            for (var i = 0; i < oModifiers.length; i++) { //### 23 to 25
+                //$.Util.setModifierValue(oNode,oModifiers[i].name,parseFloat(oModifiers[i].value));
+                $.Util.setPropertyValue(oNode,oModifiers[i].name,parseFloat(oModifiers[i].value))
+            }
+        }
+    },
+    processNodeParameters : function (oNode,oMorphs) {
+        for (var _key in oMorphs) {
+            var aFrame = _key.split("_");
+            var iFrame = parseInt(aFrame[1]);
+            var _morphs = oMorphs[_key];
+            Scene.setFrame(iFrame);
+            for (var i = 0; i < _morphs.length; i++) { //### 23 to 25
+                var _actualMorph = _morphs[i];
+                var oProp = oNode.findProperty(_actualMorph.name);
+                if (!oProp)
+                    oProp = oNode.findPropertyByLabel(_actualMorph.name);
+                if(!oProp){
+                    oProp = $.Util.getMorphPropFromNode(oNode, _actualMorph.name)
+                }
+                if(!oProp){
+                    print("property ", _actualMorph.name, " not found on node", oNode.getLabel());
+                    break;
+                }
+                $.Util.setParameterValueAtFrame(oProp,iFrame,parseFloat(_actualMorph.value));
+            }
+        }
+    },
+    setParameterValueAtFrame : function ( oProperty, iFrame, fValue ){ // From https://github.com/soltude/DazToHue-Scripts/blob/main/DthUtils.dsa
+        if( !oProperty ){
+            print("Error: Property is null.");
+            return false;
+        }
+        if( !oProperty.inherits("DzFloatProperty")){
+            print("Error: Property is not a DzFloatProperty.");
+            return false;
+        }
+        print("Property: " + oProperty.getLabel() );
+        var timeStep = Scene.getTimeStep();
+        var tTarget = iFrame * timeStep;
+        var tPrev = iFrame * timeStep - timeStep;
+        var tNext = iFrame * timeStep + timeStep;
+        var fPrevValue = oProperty.getDoubleValue(tPrev);
+        var fNextValue = oProperty.getDoubleValue(tNext);
+        var fOldValue = oProperty.getDoubleValue(tTarget);
+        /*print("_______________________________")
+        $.Util.printObject(oProperty);
+        print("_______________________________")*/
+        //Set the target frame to new value
+        // if (tPrev > 0){
+        /*oProperty.setValue(tPrev, fPrevValue);
+        print("Property "+ oProperty.getLabel());
+        print("set at frame "+ tPrev/timeStep+ " to "+ fPrevValue);*/
+        // }
+        // if (iFrame + 1 < Scene.getAnimRange().end){
+        /*oProperty.setValue(tNext, fNextValue);
+        print("set at frame "+ tNext/timeStep+ " to "+ fNextValue);*/
+        // }
+        /*oProperty.setValue(tTarget, 0.0);
+        var fZeroValue = oProperty.getValue(tTarget);*/
+        oProperty.setDoubleValue(tTarget, fValue);
+        var fActualValue = oProperty.getDoubleValue(tTarget);
+        var fTargetValue = fValue+fOldValue;
+        print("at frame "+ iFrame+ " to value "+ fValue +" OLD : "+fOldValue+" New : "+fActualValue+" > "+fTargetValue);
+        return true;
+    },
+    setPropertyByName : function(oNode, sPropName, fValue, iFrame){  // From https://github.com/soltude/DazToHue-Scripts/blob/main/DthUtils.dsa
+        iFrame = typeof iFrame !== 'undefined' ? iFrame : 0;
+        print("Setting property", sPropName, "to", fValue, "at frame", iFrame, "...");
+        oProp = oNode.findProperty(sPropName);
+        if (oProp && oProp.setValue(iFrame * Scene.getTimeStep(), fValue, DzProperty.Linear)){
+            print("Succesfully set property", oProp.getLabel(), "to", fValue, "at frame", iFrame);
+            return true;
+        } else {
+            print("Failed to set property", oProp.getLabel(), "to", fValue, "at frame", iFrame);
+            return false;
+        }
+
+    },
+    setModifierValue : function(oNode,modifierName,value){
+        var oObject = oNode.getObject();
+        var oModifier = oObject.findModifier(modifierName);
+        if(!oModifier) {
+            print("Modifier NOT FOUND : "+modifierName);
+            return false;
+        }
+
+        var _oldVal = oModifier.getValueChannel().getValue();
+        oModifier.getValueChannel().setDoubleValue(value);
+        var _newVal = oModifier.getValueChannel().getValue();
+
+        print("Modifier '" + modifierName + "' on child '" + oNode.getLabel() + "' set to "+value+" | oldv : "+_oldVal+" newv : "+_newVal);
+        return true;
+    },
+    setPropertyValue : function(oNode,name,value){
+        for (var i = 0; i < oNode.getNumProperties(); i++) {
+            //print("PNAME : "+oNode.getProperty(i).getName());
+            var oProperty = oNode.getProperty(i);
+            print("PNAME : "+oProperty.getName()+" "+name+" ");
+            if (oProperty.getName() == name) {
+                print("Property was found "+name);
+                $.Util.printObject(oProperty)
+                print("______________________");
+                break;
+            }
+        }
+    },
+    setSubdivisionLevels : function (oNode, viewLevel, renderLevel) {
+        var oObject = oNode.getObject();
+        if (oObject) {
+            var oShape = oObject.getCurrentShape();
+            if (oShape) {
+                oShape.setSubDLevel(viewLevel); // Viewport subdivision level
+                oShape.setRenderSubDLevel(renderLevel); // Render subdivision level
+                print("Set subdivision levels for " + oNode.name + ": View=" + viewLevel + ", Render=" + renderLevel);
+            }
+        }
+
+    },
+    getMorphPropFromNode : function (oNode, sModifierName){
+        var oObj = oNode.getObject();
+        if(oObj)
+        {
+            var oModifier = oObj.findModifier(sModifierName);
+            if(oModifier){
+                var oProp = oModifier.getValueChannel();
+                //oProp = oModifier.getValueControl(0);
+                return oProp;
+            }
+        }
+        return null;
+    },
+    isoNodeMatch : function (oNode, name) {
+        return oNode && oNode.name.toLowerCase() === name.toLowerCase();
+    },
+    alert : function (sMessage) {
+        MessageBox.critical( qsTr(sMessage), qsTr("MyScript"), qsTr("&OK"));
+    },
+    saveScene : function(sPath, sFileName) {
+        var oSettings = new DzFileIOSettings();
+        $.actual.oAssetIOFilter.getDefaultOptions(oSettings);
+        oSettings.setBoolValue("CompressOutput", false);
+        oSettings.setBoolValue("RunSilent", true);
+
+        var sFullPath = sPath + "/" + sFileName;
+        print("Saved Scene : "+sFullPath);
+        $.actual.oAssetIOMgr.doSaveWithOptions($.actual.oAssetIOFilter, oSettings, false, sFullPath, sPath, "");
+    },
+    ensureDirectory: function (sPath) {
+        var oDir = new DzDir(sPath);
+        if (!oDir.exists()) {
+            oDir.mkdir();
+        }
+        return sPath;
+    },
+    printObject:function(obj, indent) {
+        indent = indent || "";
+
+        // Handle non-object types first
+        if (typeof obj !== "object" || obj === null) {
+            if (obj === null) {
+                print(indent + "null");
+            } else if (obj === undefined) {
+                print(indent + "undefined");
+            } else if (typeof obj === "string") {
+                print(indent + "\"" + obj + "\"");
+            } else if (typeof obj === "number") {
+                print(indent + obj);
+            } else if (typeof obj === "boolean") {
+                print(indent + (obj ? "true" : "false"));
+            } else {
+                print(indent + "[Unknown: " + obj + "]");
+            }
+            return;
+        }
+
+        // Handle arrays
+        if (Array.isArray(obj)) {
+            print(indent + "Array [" + (obj.length === 0 ? "]" : ""));
+            for (var i = 0; i < obj.length; i++) {
+                print(indent + "  [" + i + "]: ");
+                $.Util.printObject(obj[i], indent + "    ");
+            }
+            if (obj.length > 0) print(indent + "]");
+            return;
+        }
+
+        // Handle DAZ objects
+        if (obj instanceof DzObject) {
+            print(indent + obj.className() + " {");
+            if (obj.inherits("DzNode")) {
+                print(indent + "  name: \"" + obj.name + "\"");
+                print(indent + "  label: \"" + obj.getLabel() + "\"");
+                var vPos = obj.getLocalPos();
+                print(indent + "  position: ");
+                $.Util.printObject({ x: vPos.x, y: vPos.y, z: vPos.z }, indent + "    ");
+                var aChildren = obj.getNodeChildren(false);
+                print(indent + "  children: ");
+                $.Util.printObject(aChildren, indent + "    ");
+            }
+            print(indent + "}");
+            return;
+        }
+
+        // Handle plain objects
+        print(indent + "Object {");
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+             var value = obj[key];
+             print(indent + "  " + key + ": ");
+             $.Util.printObject(value, indent + "    ");
+            }
+        }
+        print(indent + "}");
+    }
+}

@@ -1,0 +1,39 @@
+
+$.Animation = {
+    setLinearInterp : function (oNode,startFrame, endFrame){ // Taken from https://github.com/soltude/DazToHue-Scripts/blob/main/DK9_Workflow.dsa
+        startFrame = typeof startFrame !== 'undefined' ? startFrame : 0;
+        endFrame = typeof endFrame !== 'undefined' ? endFrame : 0;
+        oNode.getPropertyList().forEach( function(oProp){
+        if (oProp.hasKeys()) {
+            print("Setting linear interp for:", oProp.objectName, oProp.getValue());
+                for( var j = 0; j < oProp.getNumKeys(); j++) {
+                    oProp.setKeyInterpolationType(j, DzFloatProperty.LINEAR_INTERP);
+                    oProp.setValue(oProp.getKeyTime(j), oProp.getValue(j) , DzFloatProperty.LINEAR_INTERP );
+                    print(oProp.objectName, j, oProp.getKeyInterpolationType(j));
+                }
+            }
+        });
+    },
+    addFrames : function (iNewFrames) { // Taken from https://github.com/soltude/DazToHue-Scripts/blob/main/DK9_Workflow.dsa
+        iNewFrames = typeof iNewFrames !== 'undefined' ? iNewFrames : 1;
+        var oTimeRange = new DzTimeRange(0, Scene.getAnimRange().end + Scene.getTimeStep(0) * iNewFrames);
+        Scene.setAnimRange(oTimeRange);
+    },
+    calculateAnim : function (isDebug) {
+        isDebug = typeof isDebug !== 'undefined' ? isDebug : false;
+        $.scene.anim.timeStep = Scene.getTimeStep();
+        $.scene.anim.playbackRange = Scene.getPlayRange();
+        $.scene.anim.startFrame = $.scene.anim.playbackRange.start / $.scene.anim.timeStep;
+        $.scene.anim.endFrame = $.scene.anim.playbackRange.end / $.scene.anim.timeStep;
+        if(isDebug) {
+            print("Animation state ________")
+            print("Time step   : "+$.scene.anim.timeStep);
+            print("Start Frame : "+$.scene.anim.startFrame);
+            print("End Frame   : "+$.scene.anim.endFrame);
+            print("/Animation state _______");
+        }
+    },
+    test:function() {
+        print("Animation loaded")
+    }
+}

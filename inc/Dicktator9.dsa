@@ -1,0 +1,62 @@
+
+$.Dicktator9 = {
+    setClenchFrames : function () {
+        $.Genesis9.selectBody();
+        for (var _key in $.env.DTH.dicktator.clench) {
+            var aFrame = _key.split("_");
+            var iFrame = parseInt(aFrame[1]);
+            var _morphs = $.env.DTH.dicktator.clench[_key];
+            Scene.setFrame(iFrame);
+            for (var i = 0; i < _morphs.length; i++) { //### 23 to 25
+                var _step = _morphs[i];
+                print("Frame "+iFrame+" Name : "+_step.name +" | Value : "+parseFloat(_step.value));
+                $.Util.setModifierValue($.figure.body,_step.name,parseFloat(_step.value));
+            }
+        }
+    },
+    setAnusFrames : function () {
+        $.Genesis9.selectBody();
+        for (var _key in $.env.DTH.dicktator.anus) {
+            var aFrame = _key.split("_");
+            var iFrame = parseInt(aFrame[1]);
+            var _morphs = $.env.DTH.dicktator.anus[_key];
+            Scene.setFrame(iFrame);
+            for (var i = 0; i < _morphs.length; i++) { //### 23 to 25
+                var _step = _morphs[i];
+                print("Frame "+iFrame+" Name : "+_step.name +" | Value : "+parseFloat(_step.value));
+                $.Util.setModifierValue($.figure.body,_step.name,parseFloat(_step.value));
+            }
+        }
+    },
+    setScrotumMorphs : function () {
+        $.Dicktator9.select();
+        for (var _key in $.env.DTH.dicktator.scrotum) {
+            var aFrame = _key.split("_");
+            var iFrame = parseInt(aFrame[1]);
+            var _morphs = $.env.DTH.dicktator.scrotum[_key];
+            Scene.setFrame(iFrame);
+            for (var i = 0; i < _morphs.length; i++) { //### 23 to 25
+                var _step = _morphs[i];
+                print("Frame "+iFrame+" Name : "+_step.name +" | Value : "+parseFloat(_step.value));
+                $.Util.setModifierValue($.figure.genitalia,_step.name,parseFloat(_step.value));
+            }
+        }
+    },
+    setFenceFrames : function () {
+        $.Dicktator9.select();
+        Scene.setFrame(0);  //### Step 21
+        $.actual.action.Memorize.trigger(); //### Step 22
+        for (var i = 0; i < $.env.DTH.fence.dicktator.length; i++) { //### 23 to 25
+            print("Set Fence Frames : "+$.env.DTH.fence.dicktator[i]);
+            Scene.setFrame($.env.DTH.fence.dicktator[i]);
+            $.actual.action.Restore.trigger();
+        }
+    },
+    select : function () {
+        Scene.selectAllNodes (false);
+        $.figure.genitalia.select();
+    },
+    test:function() {
+     print("Dicktator9 loaeded")
+    }
+}

@@ -1,0 +1,78 @@
+// DAZ Studio version 4.23.0.1 filetype DAZ Script
+
+var oDzFile = new DzFile( getScriptFileName() );
+var oAbsFDir = oDzFile.absoluteDir();
+var sAbsPath = oAbsFDir.absolutePath();
+include(sAbsPath+"/inc/_Base.dsa");
+
+(function() {
+    try {
+        Scene.setFrame(0);
+
+        $.figure.body = $.Genesis9.getObject();
+        if($.figure.body === null) {
+            $.Util.alert("Genesis 9 Character not found on the scene");
+            return null;
+        }
+        $.Animation.calculateAnim(true);
+        $.Genesis9.parseCharacter();
+
+        if($.figure.genType === null) {
+            $.Util.alert("DTH Rom setup completed please export the character");
+            return null;
+        }
+
+        var _addToTimeLine = 0;
+        if($.figure.genType === "dicktator") {
+            _addToTimeLine = 640;
+        } else if($.figure.genType === "goldenpalace") {
+            _addToTimeLine = 690;
+        }
+
+        $.Animation.addFrames(_addToTimeLine); //### add all frames
+        // ### Dicktator 9 Guide 5.2
+        $.Genesis9.loadPose($.env.DTH.poses.G9.body.linear.base);
+        $.Genesis9.selectMouth();
+        $.Genesis9.loadPose($.env.DTH.poses.G9.body.linear.mouth);
+        $.Animation.calculateAnim(true);
+
+        Scene.setFrame(0); //### Step 15
+        $.actual.action.Memorize.trigger(); //### Step 16
+        Scene.setFrame(617);
+        $.actual.action.Restore.trigger(); //### Step 17
+
+        if($.figure.genType === "dicktator") {
+            $.Dicktator9.select(); //### Step 18
+            $.Genesis9.loadPose($.env.DTH.poses.G9.genitalia.linear.dicktator); //### Step 19
+            $.Dicktator9.setFenceFrames();  //### Step 21 -> 25
+            $.Util.processNodeParameters($.figure.genitalia,$.env.DTH.dicktator.scrotum);
+            //### 36 to 44 Skipped for now
+            $.Genesis9.selectBody();
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.dicktator.anus);
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.dicktator.clench);
+
+            Scene.setFrame(0); //### Step 15
+            //$.Util.setInterpolation();
+        } else if($.figure.genType === "goldenpalace") {
+            $.GoldenPalace9.select(); //### Step 18
+            $.Genesis9.loadPose($.env.DTH.poses.G9.genitalia.linear.goldenPalace); //### Step 19
+            $.GoldenPalace9.setFenceFrames();  //### Step 21 -> 25
+
+            $.Genesis9.selectBody();
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.goldenPalace.pose);
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.goldenPalace.open);
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.goldenPalace.squeeze);
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.goldenPalace.stretch);
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.goldenPalace.anusOpen);
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.goldenPalace.anusContradiction);
+            $.Util.processNodeParameters($.figure.body,$.env.DTH.goldenPalace.clitorisErect);
+            Scene.setFrame(0); //### Step 15
+            //$.Util.setInterpolation();
+        }
+    } catch (e) {
+        print("Error including script: " + e);
+        $.Util.alert("Error including script: " + e);
+    }
+})();
+
+

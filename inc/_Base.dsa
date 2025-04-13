@@ -1,0 +1,53 @@
+// do not play any of those
+
+var $ = {};
+
+var aPath = sAbsPath.split("/");
+aPath.pop();
+var _dthPath = aPath.join("/");
+
+include(sAbsPath+"/inc/Options.dsa");
+include(sAbsPath+"/inc/Util.dsa");
+include(sAbsPath+"/inc/Genesis9.dsa");
+include(sAbsPath+"/inc/Dicktator9.dsa");
+include(sAbsPath+"/inc/GoldenPalace9.dsa");
+include(sAbsPath+"/inc/Animation.dsa");
+
+
+$.scene = {};
+$.actual = {};
+
+$.scene.oFile = new DzFile(Scene.getFilename());
+$.scene.sBasePath = $.scene.oFile.path();
+$.scene.sName = $.scene.oFile.baseName();
+$.scene.aSaveNames = [
+    $.scene.sName + "_Body",
+    $.scene.sName + "_Groom",
+    $.scene.sName + "_Wardrobe"
+];
+$.scene.anim = {};
+
+
+// Get the asset IO manager and scene filter
+$.actual.oAssetIOMgr = App.getAssetIOMgr();
+$.actual.nAssetIOFilter = $.actual.oAssetIOMgr.findFilter("DzSceneAssetFilter");
+$.actual.oAssetIOFilter = $.actual.oAssetIOMgr.getFilter($.actual.nAssetIOFilter);
+$.actual.action = {};
+$.actual.action.Memorize = MainWindow.getActionMgr().findAction('DzMemorizeSelectedItemsAction');
+if(!$.actual.action.Memorize) {
+    $.Util.alert("Memorize action not found. Execution terminated");
+}
+$.actual.action.Restore = MainWindow.getActionMgr().findAction('DzRestoreSelectedItemsAction');
+if(!$.actual.action.Restore) {
+    $.Util.alert("Restore action not found. Execution terminated");
+}
+
+
+$.figure = {
+    body : null,
+    mouth : null,
+    genitalia : null,
+    genType : null
+}
+
+

@@ -1,0 +1,279 @@
+
+$.Genesis9 = {
+    selectMouth : function() {
+        Scene.selectAllNodes (false);
+        $.figure.mouth.select();
+    },
+    selectBody : function() {
+        Scene.selectAllNodes (false);
+        $.figure.body.select();
+    },
+    parseCharacter : function () {
+        var aChildNodes = $.figure.body.getNodeChildren(false); // false = non-recursive, first-level only
+        var sFigureName = $.figure.body.getName();
+        // Loop through the child nodes
+        print("Parse body begin __"+aChildNodes.length+"_______________________________________")
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+            var nodeName = oChildNode.getName().toLowerCase();
+            if (nodeName.indexOf("mouth") !== -1) {
+                print("First-level path found: " + sFigureName + " Mouth | "+nodeName+"");
+                $.figure.mouth = oChildNode;
+            } else if (nodeName.indexOf("g9dicktator_8666") !== -1) {
+                print("Geograft found: " + sFigureName + " -> " + nodeName);
+                $.figure.genitalia = oChildNode;
+                $.figure.genType = "dicktator";
+            } else if (nodeName.indexOf("goldenpalace_g9_9694") !== -1) {
+                print("Geograft found: " + sFigureName + " -> " + nodeName);
+                $.figure.genitalia = oChildNode;
+                $.figure.genType = "goldenpalace"
+            }
+        }
+    },
+    loopMorphs: function () {
+        var oScene = Scene;
+
+        // Get the list of selected nodes
+        var aSelectedNodes = oScene.getSelectedNodeList();
+
+        // Check if there are any selected nodes
+        if (aSelectedNodes.length === 0) {
+            MessageBox.information("No characters selected in the scene.", "Selection Error", "&OK");
+            return;
+        }
+
+        // Loop through each selected node
+        for (var i = 0; i < aSelectedNodes.length; i++) {
+            var oNode = aSelectedNodes[i];
+
+            // Check if the node is a figure (e.g., Genesis 9)
+            if (oNode.inherits("DzFigure")) {
+                var sFigureName = oNode.getName();
+                print("Selected Figure: " + sFigureName);
+
+                // Get the object associated with the figure
+                var oObject = oNode.getObject();
+                if (!oObject) {
+                    print("No object found for " + sFigureName);
+                    continue;
+                }
+
+                // Check for geografts or specific components (like mouth)
+                var nNumModifiers = oObject.getNumModifiers();
+                for (var j = 0; j < nNumModifiers; j++) {
+                    var oModifier = oObject.getModifier(j);
+                    var sModifierName = oModifier.getName();
+
+                    // Look for specific identifiers like "Mouth" or geografts
+                    if (sModifierName.indexOf("Mouth") !== -1) {
+                        print("First-level path found: " + sFigureName + " Mouth | "+sModifierName+"");
+                    } else if (oModifier.inherits("DzGraftModifier")) {
+                        print("Geograft found: " + sFigureName + " -> " + sModifierName);
+                    }
+                }
+
+                // Optionally, check the node's skeleton for specific bones (e.g., jaw for mouth)
+                var oSkeleton = oNode.getSkeleton();
+                if (oSkeleton) {
+                    var oJawBone = oSkeleton.findBoneByLabel("lowerJaw");
+                    if (oJawBone) {
+                        print("Jaw bone detected, indicating mouth component for " + sFigureName);
+                    }
+                }
+            } else {
+                print("Selected node '" + oNode.getName() + "' is not a figure.");
+            }
+        }
+    },
+    loadPose : function (sPosePath) {
+        print("load pose "+sPosePath);
+        var oNode = Scene.getPrimarySelection();
+        if (!oNode) {
+            MessageBox.warning("Please select a figure in the scene first.", "No Selection", "&OK");
+            return;
+        }
+
+        // Check if the file exists
+        print("load pose 2 "+sPosePath);
+        var oFile = new DzFile(sPosePath);
+        if (!oFile.exists()) {
+            MessageBox.warning("The specified pose preset file does not exist.", "File Error", "&OK");
+            return;
+        }
+        print(sPosePath);
+        var oContentMgr = App.getContentMgr();
+        oContentMgr.openFile(sPosePath);
+    },
+    setSubdivisionLevels : function () {
+        var aChildNodes = $.figure.body.getNodeChildren(false); // false = non-recursive, first-level only
+
+        // Loop through the child nodes
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+
+            // Skip the character's own bones, focus on objects like clothes, hair, etc.
+            if (!oChildNode.inherits("DzBone")) {
+                var oShape = oChildNode.getCurrentShape();
+                if (oShape) {
+                    oShape.setSubDLevel(viewLevel); // Viewport subdivision level
+                    oShape.setRenderSubDLevel(renderLevel); // Render subdivision level
+                    print("Set subdivision levels for " + node.name + ": View=" + viewLevel + ", Render=" + renderLevel);
+                }
+            }
+        }
+    },
+    filterForBody : function () {
+        var oScene = Scene;
+        var aChildNodes = $.figure.body.getNodeChildren(false); // false = non-recursive, first-level only
+        var nodesToKeep = [];
+        // Loop through the child nodes
+        print("Body filter begin__"+aChildNodes.length+"_______________________________________")
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+
+            // Skip the character's own bones, focus on objects like clothes, hair, etc.
+            if (!oChildNode.inherits("DzBone")) {
+                var keepNames = $.env.seperator.keep.aBody;
+                for (var j = 0; j < keepNames.length; j++) {
+                    if ($.Util.isNodeMatch(oChildNode, keepNames[j])) {
+                        print("First-level item Keep " + i + ": " + oChildNode.name);
+                        nodesToKeep.push(oChildNode);
+                        break;
+                    }
+                }
+            }
+        }
+        print("Keep item selected__________________________________________")
+
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+            if(oChildNode.name == "hip") {
+                continue;
+            }
+            if (nodesToKeep.indexOf(oChildNode) === -1) {
+                print("First-level item Dele " + i + ": " + oChildNode.name);
+                oScene.removeNode(oChildNode);
+            }
+        }
+        print("Filter completed __________________________________________")
+    },
+    filterForGroom : function () {
+        var oScene = Scene;
+        var aChildNodes = $.figure.body.getNodeChildren(false); // false = non-recursive, first-level only
+        var nodesToKeep = [];
+        // Loop through the child nodes
+        print("Groom filter begin__"+aChildNodes.length+"_______________________________________")
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+
+            // Skip the character's own bones, focus on objects like clothes, hair, etc.
+            if (!oChildNode.inherits("DzBone")) {
+                var keepNames = $.env.seperator.keep.aGroom;
+                for (var j = 0; j < keepNames.length; j++) {
+                    if ($.Util.isNodeMatch(oChildNode, keepNames[j])) {
+                        print("First-level item Keep " + i + ": " + oChildNode.name);
+                        nodesToKeep.push(oChildNode);
+                        break;
+                    }
+                }
+            }
+
+
+            var nodeName = oChildNode.getName().toLowerCase();
+
+            // Identify hair
+            if (nodeName.indexOf("hair") != -1 || nodeName.indexOf("wig") != -1) {
+                print("First-level item Keep " + i + ": " + oChildNode.name);
+                nodesToKeep.push(oChildNode);
+            }
+            // Identify eyebrows
+            else if (nodeName.indexOf("eyebrow") != -1 || nodeName.indexOf("brow") != -1) {
+                print("First-level item Keep " + i + ": " + oChildNode.name);
+                nodesToKeep.push(oChildNode);
+            }
+            // Identify eyelashes
+            else if (nodeName.indexOf("eyelash") != -1 || nodeName.indexOf("lash") != -1) {
+                print("First-level item Keep " + i + ": " + oChildNode.name);
+                nodesToKeep.push(oChildNode);
+            }
+        }
+
+        print("Keep item selected__________________________________________")
+
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+            if(oChildNode.name == "hip") {
+                continue;
+            }
+            if (nodesToKeep.indexOf(oChildNode) === -1) {
+                print("First-level item Dele " + i + ": " + oChildNode.name);
+                oScene.removeNode(oChildNode);
+            }
+        }
+        print("Filter completed __________________________________________")
+    },
+    filterForWardrobe : function () {
+        var oScene = Scene;
+        var aChildNodes = $.figure.body.getNodeChildren(false); // false = non-recursive, first-level only
+        var nodesToKeep = [];
+        // Loop through the child nodes
+        print("Wardrobe filter begin__"+aChildNodes.length+"_______________________________________")
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+            // Skip the character's own bones, focus on objects like clothes, hair, etc.
+            if (!oChildNode.inherits("DzBone")) {
+                var keepNames = $.env.seperator.keep.aWardrobe;
+                for (var j = 0; j < keepNames.length; j++) {
+                    if ($.Util.isNodeMatch(oChildNode, keepNames[j])) {
+                        print("First-level item Keep " + i + ": " + oChildNode.name);
+                        nodesToKeep.push(oChildNode);
+                        break;
+                    }
+                }
+            }
+        }
+        print("Wardrobe Second filter begin__"+aChildNodes.length+"_______________________________________")
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+            var nodeName = oChildNode.getName().toLowerCase();
+            print(":: " + i + ": " + nodeName);
+            // Skip the character's own bones, focus on objects like clothes, hair, etc.
+            var keepNames = $.env.seperator.keep.aClothes;
+            for (var j = 0; j < keepNames.length; j++) {
+                var aName = keepNames[j].toLowerCase();
+                if (nodeName.indexOf(aName) != -1) {
+                    print("First-level item Keep " + i + ": " + oChildNode.name);
+                    nodesToKeep.push(oChildNode);
+                    break;
+                }
+            }
+        }
+
+        print("Keep item selected__________________________________________")
+
+        for (var i = 0; i < aChildNodes.length; i++) {
+            var oChildNode = aChildNodes[i];
+            if(oChildNode.name == "hip") {
+                continue;
+            }
+            if (nodesToKeep.indexOf(oChildNode) === -1) {
+                print("First-level item Dele " + i + ": " + oChildNode.name);
+                oScene.removeNode(oChildNode);
+            }
+        }
+        print("Filter completed __________________________________________")
+    },
+    getObject : function () {
+        var oGenesis9 = null;
+        var aNodes = Scene.getNodeList();
+        for (var i = aNodes.length - 1; i >= 0; i--) {
+            if (aNodes[i].inherits("DzSkeleton") && aNodes[i].name == "Genesis9") {
+                oGenesis9 = aNodes[i];
+            }
+        }
+        return oGenesis9;
+    },
+    test : function() {
+        print("Genesis9 loaeded")
+    }
+}

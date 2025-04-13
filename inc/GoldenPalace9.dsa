@@ -1,0 +1,20 @@
+
+$.GoldenPalace9 = {
+    setFenceFrames : function () {
+        $.GoldenPalace9.select();
+        Scene.setFrame(0);  //### Step 21
+        $.actual.action.Memorize.trigger(); //### Step 22
+        for (var i = 0; i < $.env.DTH.fence.goldenPalace.length; i++) { //### 23 to 25
+            print("Set Fence Frames : "+$.env.DTH.fence.goldenPalace[i]);
+            Scene.setFrame($.env.DTH.fence.goldenPalace[i]);
+            $.actual.action.Restore.trigger();
+        }
+    },
+    select : function () {
+        Scene.selectAllNodes (false);
+        $.figure.genitalia.select();
+    },
+    test:function() {
+        print("GoldenPalace9 loaeded")
+    }
+}

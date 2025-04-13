@@ -1,0 +1,381 @@
+// Alla available parameters will be here. you may change those for your needs
+
+$.env = {};
+$.env.scriptDir = sAbsPath;
+$.env.seperator = {
+    aMainDirs : ["Daz", "Geo", "Hou", "Ue5"],
+    aDazSubDirs : ["01_Body", "02_Groom", "03_Wardrobe"],
+    keep : {
+        aBody : [
+            "Genesis 9",
+            "hip",
+            "Genesis9Tear",
+            "Genesis9Eyes",
+            "Genesis9Mouth",
+            "GoldenPalace_G9_9694",
+            "GoldenPalace_G9_Shell_Minora",
+            "GoldenPalace_G9_Shell_Majora",
+            "G9Dicktator_8666",
+            "DicktatorG9_Shell",
+            //"DicktatorG9_ForeskinShell",
+        ],
+        aGroom : [
+            "Genesis 9",
+            "hip",
+            "Genesis9Tear",
+            "Genesis9Eyes",
+            "Genesis9Mouth",
+        ],
+        aWardrobe : [
+            "Genesis 9",
+            "hip",
+            "Genesis9Tear",
+            "Genesis9Eyes",
+            "Genesis9Mouth",
+        ],
+        aClothes : [
+            "shirt",
+            "top",
+            "blouse",
+            "jacket",
+            "coat",
+            "sweater",
+            "hoodie",
+            "vest",
+            "tunic",
+
+            // Bottoms
+            "pants",
+            "trousers",
+            "jeans",
+            "shorts",
+            "skirt",
+            "leggings",
+
+            // Full Body
+            "dress",
+            "suit",
+            "robe",
+            "gown",
+            "jumpsuit",
+            "overalls",
+
+            // Underwear
+            "underwear",
+            "briefs",
+            "boxers",
+            "panties",
+            "bra",
+            "corset",
+            "undershirt",
+            "undies",
+
+            // Footwear
+            "shoe",
+            "shoes",
+            "boot",
+            "boots",
+            "sneaker",
+            "sneakers",
+            "sandal",
+            "sandals",
+            "heel",
+            "heels",
+
+            // Sockswear
+            "sock",
+            "socks",
+            "stocking",
+            "stockings",
+            "tights",
+            "hose",
+
+            // General Clothing Terms
+            "cloth",
+            "garment",
+            "outfit",
+            "wear",
+            "apparel",
+            "gown",
+            "nightgown"
+        ]
+    }
+}
+$.env.DTH = {
+    sPath : _dthPath+"/DazToHue",
+    poses : {
+        G9 : {
+            body : {
+                linear : {
+                    base : _dthPath+'/DazToHue/Poses/Genesis 9/Linear/G9 LINEAR JCM FAC - Base.duf',
+                    mouth : _dthPath+'/DazToHue/Poses/Genesis 9/Linear/G9 LINEAR JCM FAC - Mouth.duf',
+                }
+            },
+            genitalia : {
+                linear: {
+                    dicktator : _dthPath+'/DazToHue/Poses/Genesis 9/Common/Dicktator 9/DK9 - Dicktator.duf',
+                    goldenPalace : _dthPath+'/DazToHue/Poses/Genesis 9/Common/Golden Palace 9/GP9 - Golden Palace.duf',
+                }
+            }
+        }
+    },
+    fence : {
+        dicktator : [617,650,663,664,666,669],
+        goldenPalace : [617,710,712,716,719],
+    },
+    dicktator : {
+        scrotum : {
+            f_629 : [
+                { name:'dth_dk9_scrotum_bend_backward', value:0},
+            ],
+            f_630 : [
+                { name:'dth_dk9_scrotum_bend_backward', value:1.0},
+                { name:'dth_dk9_scrotum_bend_forward', value:0},
+            ],
+            f_631 : [
+                { name:'dth_dk9_scrotum_bend_backward', value:0},
+                { name:'dth_dk9_scrotum_bend_forward', value:1.0},
+                { name:'dth_dk9_scrotum_side_left', value:0},
+            ],
+            f_632 : [
+                { name:'dth_dk9_scrotum_bend_forward', value:0},
+                { name:'dth_dk9_scrotum_side_left', value:1.0},
+                { name:'dth_dk9_scrotum_side_right', value:0},
+            ],
+            f_633 : [
+                { name:'dth_dk9_scrotum_side_left', value:0},
+                { name:'dth_dk9_scrotum_side_right', value:1.0},
+                { name:'dth_dk9_scrotum_twist_left', value:0},
+            ],
+            f_634 : [
+                { name:'dth_dk9_scrotum_side_right', value:0},
+                { name:'dth_dk9_scrotum_twist_left', value:1.0},
+                { name:'dth_dk9_scrotum_twist_right', value:0},
+            ],
+            f_635 : [
+                { name:'dth_dk9_scrotum_twist_left', value:0},
+                { name:'dth_dk9_scrotum_twist_right', value:1.0},
+            ],
+            f_636 : [
+                { name:'dth_dk9_scrotum_twist_right', value:0},
+            ],
+        },
+        anus: {
+            f_666: [
+                {name: 'DK_Anus_Open3', value: 0.0},
+                {name: 'DK_Anus_Contraction', value: 1.2},
+                {name: 'DK_Anus_Contraction_Wrinkles1', value: 0.7191},
+                {name: 'DK_Anus_Contraction_Wrinkles3', value: -0.4719},
+            ],
+            f_668: [
+                {name: 'DK_Anus_Open3', value: 0.0},
+                {name: 'DK_Anus_Contraction', value: 1.2},
+                {name: 'DK_Anus_Contraction_Wrinkles1', value: 0.7191},
+                {name: 'DK_Anus_Contraction_Wrinkles3', value: -0.4719},
+            ],
+            f_667: [
+                {name: 'DK_Anus_Open3', value: 1},
+                {name: 'DK_Anus_Contraction', value: 0},
+                {name: 'DK_Anus_Contraction_Wrinkles1', value: 0},
+                {name: 'DK_Anus_Contraction_Wrinkles3', value: 0},
+            ],
+        },
+        clench: {
+            f_667: [
+                {name: 'DK_Anus_Open1', value: 0.0},
+                {name: 'DK_Anus_ContractionMore', value: 0.0},
+                {name: 'DK_Anus_Contraction_Shape1', value: 0.0},
+                {name: 'DK_Anus_Contraction_Shape2', value: 0.0},
+                {name: 'DK_Anus_Contraction_Wrinkles2', value: 0},
+            ],
+            f_669: [
+                {name: 'DK_Anus_Open3', value: 0},
+                {name: 'DK_Anus_Contraction', value: 1.2},
+                {name: 'DK_Anus_Contraction_Wrinkles1', value: 0.719},
+                {name: 'DK_Anus_Contraction_Wrinkles3', value: -0.472},
+                {name: 'DK_Anus_Open1', value: 0.0},
+                {name: 'DK_Anus_ContractionMore', value: 0.0},
+                {name: 'DK_Anus_Contraction_Shape1', value: 0.0},
+                {name: 'DK_Anus_Contraction_Shape2', value: 0.0},
+                {name: 'DK_Anus_Contraction_Wrinkles2', value: 0},
+            ],
+            f_668: [
+                {name: 'DK_Anus_Open1', value: 1},
+                {name: 'DK_Anus_ContractionMore', value: 1},
+                {name: 'DK_Anus_Contraction_Shape1', value: 1},
+                {name: 'DK_Anus_Contraction_Shape2', value: .2},
+                {name: 'DK_Anus_Contraction_Wrinkles1', value: .2},
+                {name: 'DK_Anus_Contraction_Wrinkles2', value: .2},
+                {name: 'DK_Anus_Contraction_Wrinkles3', value: .2},
+            ],
+        }
+    },
+    goldenPalace : {
+        pose : {
+            f_711 : [
+                {name: 'GP_Majora_Pinch1_Left', value: 0.6782},
+                {name: 'GP_Majora_Pinch1_Right', value: 0.6782},
+                {name: 'GP_Majora_Pinch2_Left', value: 0.6782},
+                {name: 'GP_Majora_Pinch2_Right', value: 0.6782},
+                {name: 'GP_Majora_Inflate_Left', value: -0.2},
+                {name: 'GP_Majora_Inflate_Right', value: -0.2},
+                {name: 'GP_Majora_Length_Left', value: 0.0},
+                {name: 'GP_Majora_Length_Right', value: 0.0},
+                {name: 'GP_Majora_Straight_Left', value: 0.45},
+                {name: 'GP_Majora_Straight_Right', value: 0.45},
+                {name: 'GP_Majora_BlowUp_Left', value: 0.3715},
+                {name: 'GP_Majora_BlowUp_Right', value: 0.3715},
+                {name: 'GP_Minora_Pinch1_Left', value: 1.0},
+                {name: 'GP_Minora_Pinch1_Right', value: 1.0},
+                {name: 'GP_Minora_Pinch2_Left', value: 1.0},
+                {name: 'GP_Minora_Pinch2_Right', value: 1.0},
+            ],
+            /*f_712 : [
+                {name: 'GP_Majora_Pinch1_Left', value: 0.0},
+                {name: 'GP_Majora_Pinch1_Right', value: 0.0},
+                {name: 'GP_Majora_Pinch2_Left', value: 0.0},
+                {name: 'GP_Majora_Pinch2_Right', value: 0.0},
+                {name: 'GP_Majora_Inflate_Left', value: 0.0},
+                {name: 'GP_Majora_Inflate_Right', value: 0.0},
+                {name: 'GP_Majora_Length_Left', value: 0.0},
+                {name: 'GP_Majora_Length_Right', value: 0.0},
+                {name: 'GP_Majora_Straight_Left', value: 0.0},
+                {name: 'GP_Majora_Straight_Right', value: 0.0},
+                {name: 'GP_Majora_BlowUp_Left', value: 0.0},
+                {name: 'GP_Majora_BlowUp_Right', value: 0.0},
+                {name: 'GP_Minora_Pinch1_Left', value: 0.0},
+                {name: 'GP_Minora_Pinch1_Right', value: 0.0},
+                {name: 'GP_Minora_Pinch2_Left', value: 0.0},
+                {name: 'GP_Minora_Pinch2_Right', value: 0.0},
+            ] */
+        },
+        open : {
+            f_712 : [
+                {name: 'GP_Vagina_Open5', value: 0},
+            ],
+            f_714 : [
+                {name: 'GP_Vagina_Open5', value: 0},
+            ],
+            f_713 : [
+                {name: 'GP_Vagina_Open5', value: 1},
+            ],
+        },
+        squeeze : {
+            f_713 : [
+                {name: 'GP_Vagina_Open5_Squeeze', value: 0},
+            ],
+            f_715 : [
+                {name: 'GP_Vagina_Open5_Squeeze', value: 0},
+            ],
+            f_714 : [
+                {name: 'GP_Vagina_Open5_Squeeze', value: 1},
+            ],
+        },
+        stretch : {
+            f_714 : [
+                {name: 'GP_Vagina_Open', value: 0.0},
+                {name: 'GP_Vagina_Open4', value: 0.0},
+                {name: 'GP_Vagina_Open5', value: 0.0},
+                {name: 'GP_GenMove_Front-Back', value: 0.0},
+                {name: 'GP_LegWiden1_Left', value: 0.0},
+                {name: 'GP_LegWiden1_Right', value: 0.0},
+                {name: 'GP_LegWiden2_Left', value: 0.0},
+                {name: 'GP_LegWiden2_Right', value: 0.0},
+                {name: 'GP_LegWiden3_Left', value: 0.0},
+                {name: 'GP_LegWiden3_Right', value: 0.0},
+                {name: 'GP_LegWiden4_Left', value: 0.0},
+                {name: 'GP_LegWiden4_Right', value: 0.0},
+                {name: 'GP_LegWiden5_Left', value: 0.0},
+                {name: 'GP_LegWiden5_Right', value: 0.0},
+                {name: 'GP_LegWiden7_Left', value: 0.0},
+                {name: 'GP_LegWiden7_Right', value: 0.0},
+                {name: 'GPV_Vagina_Open_LabiaFrontWiden_Left', value: 0.0},
+                {name: 'GPV_Vagina_Open_LabiaFrontWiden_Right', value: 0.0},
+            ],
+            f_716 : [
+                {name: 'GP_Vagina_Open', value: 0.0},
+                {name: 'GP_Vagina_Open4', value: 0.0},
+                {name: 'GP_Vagina_Open5', value: 0.0},
+                {name: 'GP_GenMove_Front-Back', value: 0.0},
+                {name: 'GP_LegWiden1_Left', value: 0.0},
+                {name: 'GP_LegWiden1_Right', value: 0.0},
+                {name: 'GP_LegWiden2_Left', value: 0.0},
+                {name: 'GP_LegWiden2_Right', value: 0.0},
+                {name: 'GP_LegWiden3_Left', value: 0.0},
+                {name: 'GP_LegWiden3_Right', value: 0.0},
+                {name: 'GP_LegWiden4_Left', value: 0.0},
+                {name: 'GP_LegWiden4_Right', value: 0.0},
+                {name: 'GP_LegWiden5_Left', value: 0.0},
+                {name: 'GP_LegWiden5_Right', value: 0.0},
+                {name: 'GP_LegWiden7_Left', value: 0.0},
+                {name: 'GP_LegWiden7_Right', value: 0.0},
+                {name: 'GPV_Vagina_Open_LabiaFrontWiden_Left', value: 0.0},
+                {name: 'GPV_Vagina_Open_LabiaFrontWiden_Right', value: 0.0},
+            ],
+            f_715 : [
+                {name: 'GP_Vagina_Open', value: 1},
+                {name: 'GP_Vagina_Open4', value: 0.809},
+                {name: 'GP_Vagina_Open5', value: 0.191},
+                {name: 'GP_GenMove_Front-Back', value: 0.41},
+                {name: 'GP_LegWiden1_Left', value: 0.802},
+                {name: 'GP_LegWiden1_Right', value: 0.802},
+                {name: 'GP_LegWiden2_Left', value: 1.072},
+                {name: 'GP_LegWiden2_Right', value: 1.072},
+                {name: 'GP_LegWiden3_Left', value: 1.278},
+                {name: 'GP_LegWiden3_Right', value: 1.278},
+                {name: 'GP_LegWiden4_Left', value: 0.82},
+                {name: 'GP_LegWiden4_Right', value: 0.82},
+                {name: 'GP_LegWiden5_Left', value: 0.371},
+                {name: 'GP_LegWiden5_Right', value: 0.371},
+                {name: 'GP_LegWiden7_Left', value: 0.29},
+                {name: 'GP_LegWiden7_Right', value: 0.29},
+                {name: 'GPV_Vagina_Open_LabiaFrontWiden_Left', value: 0.365},
+                {name: 'GPV_Vagina_Open_LabiaFrontWiden_Right', value: 0.365},
+            ],
+        },
+        anusOpen : {
+            f_714 : [
+                {name: 'GP_Anus_Open', value: 0},
+                {name: 'GP_Anus_Open3', value: 0},
+            ],
+            f_716 : [
+                {name: 'GP_Anus_Open', value: 0},
+                {name: 'GP_Anus_Open3', value: 0},
+            ],
+            f_717 : [
+                {name: 'GP_Anus_Open', value: 1},
+                {name: 'GP_Anus_Open3', value: 0.809},
+            ],
+        },
+        anusContradiction : {
+            f_714 : [
+                {name: 'GP_PR_Anus_Contraction05', value: 0.2},
+                {name: 'GP_PR_Anus_Contraction06', value: 0.28},
+                {name: 'GP_PR_Anus_Contraction07', value: 0.40},
+            ],
+            f_716 : [
+                {name: 'GP_PR_Anus_Contraction05', value: 0.2},
+                {name: 'GP_PR_Anus_Contraction06', value: 0.28},
+                {name: 'GP_PR_Anus_Contraction07', value: 0.40},
+            ],
+            f_717 : [
+                {name: 'GP_PR_Anus_Contraction05', value: 0.5},
+                {name: 'GP_PR_Anus_Contraction06', value: 0.7},
+                {name: 'GP_PR_Anus_Contraction07', value: 1.0},
+            ],
+        },
+        clitorisErect : {
+            f_720 : [
+                {name: 'GP_Clitoris_Scale1', value: 0.732},
+                {name: 'GP_Clitoris_Erection1', value: 0.556},
+                {name: 'GP_Clitoris_Erection2', value: 0.496},
+                {name: 'GP_Clitoris_Erection_RootStraight', value: 1.0},
+                {name: 'GP_Clitoris_Shape1', value: 0.979},
+                {name: 'GP_Clitoris_Shape4', value: 0.085},
+            ],
+        },
+    },
+}
+
+
+print("/Options")
